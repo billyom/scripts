@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Invoke with -h for help.
+
 # Example output from appctl dpctl/show -s
 #netdev@ovs-netdev:
 #        lookups: hit:672873135 missed:4 lost:0
@@ -37,8 +39,8 @@
 
 function show_help()
 {
-    echo "$(basename $0) - monitor ovs-appctl dpctl/show -s"
-    echo "    -i interfaces to monitor e.g -i \"iface1 iface2\""
+    echo "$(basename $0) - monitor o/p from 'sudo ./utilities/ovs-appctl dpctl/show -s'"
+    echo "    -i list interfaces to monitor e.g -i \"iface1 iface2\""
     echo "    -u report in packets not 1000s of packets"
     return 0
 }
