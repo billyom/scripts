@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# Invoke with -h for help.
-
 # Example output from appctl dpctl/show -s
 #netdev@ovs-netdev:
 #        lookups: hit:672873135 missed:4 lost:0
@@ -39,14 +37,17 @@
 
 function show_help()
 {
-    echo "$(basename $0) - monitor o/p from 'sudo ./utilities/ovs-appctl dpctl/show -s'"
-    echo "    -i list interfaces to monitor e.g -i \"iface1 iface2\""
+    echo "$(basename $0) - monitor ovs-appctl dpctl/show -s"
+    echo "    -i interfaces to monitor e.g -i \"iface1 iface2\""
     echo "    -u report in packets not 1000s of packets"
     return 0
 }
 
+#TODO autodiscover interfaces
 #TODO need to account for processing overhead to calulate rates more accurately
 # - Currently pps, bps overstated by ~2-4%. Loss% unaffected.
+#DONE present tx stats too \o/
+
 DELAY=5
 
 IFACES=(dpdk_0 dpdk_1 dpdk_2 dpdk_3)
@@ -95,34 +96,59 @@ do
     echo $(date) and previous $DELAY secs
     for iface in ${IFACES[*]}
     do
-        drops_t0=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*RX packets.*dropped:\([0-9]\+\).*$/\1/p" < $dpctl_show_t0)
-        pps_t0=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*RX packets:\([0-9]\+\) errors.*$/\1/p" < $dpctl_show_t0)
-        bytes_t0=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*RX bytes:\([0-9]\+\) .*$/\1/p" < $dpctl_show_t0)
-        drops_t1=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*RX packets.*dropped:\([0-9]\+\).*$/\1/p" < $dpctl_show_t1)
-        pps_t1=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*RX packets:\([0-9]\+\) errors.*$/\1/p" < $dpctl_show_t1)
-        bytes_t1=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*RX bytes:\([0-9]\+\) .*$/\1/p" < $dpctl_show_t1)
+        rx_drops_t0=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*RX packets.*dropped:\([0-9]\+\).*$/\1/p" < $dpctl_show_t0)
+        rx_pps_t0=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*RX packets:\([0-9]\+\) errors.*$/\1/p" < $dpctl_show_t0)
+        rx_bytes_t0=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*RX bytes:\([0-9]\+\) .*$/\1/p" < $dpctl_show_t0)
+        rx_drops_t1=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*RX packets.*dropped:\([0-9]\+\).*$/\1/p" < $dpctl_show_t1)
+        rx_pps_t1=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*RX packets:\([0-9]\+\) errors.*$/\1/p" < $dpctl_show_t1)
+        rx_bytes_t1=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*RX bytes:\([0-9]\+\) .*$/\1/p" < $dpctl_show_t1)
+
+        tx_drops_t0=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*TX packets.*dropped:\([0-9]\+\).*$/\1/p" < $dpctl_show_t0)
+        tx_pps_t0=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*TX packets:\([0-9]\+\) errors.*$/\1/p" < $dpctl_show_t0)
+        tx_bytes_t0=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*TX bytes:\([0-9]\+\) .*$/\1/p" < $dpctl_show_t0)
+        tx_drops_t1=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*TX packets.*dropped:\([0-9]\+\).*$/\1/p" < $dpctl_show_t1)
+        tx_pps_t1=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*TX packets:\([0-9]\+\) errors.*$/\1/p" < $dpctl_show_t1)
+        tx_bytes_t1=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*TX bytes:\([0-9]\+\) .*$/\1/p" < $dpctl_show_t1)
 
         #if [[ -z $drops_t0 || -z $pps_t0 || -z ... ]]; then error continue.
-        drops_pps=$[($drops_t1 - $drops_t0) / $DELAY]
-        rxd_pps=$[($pps_t1 - $pps_t0) / $DELAY]
-        rxd_bps=$[($bytes_t1 - $bytes_t0) * 8 / $DELAY]
-        offered_pps=$[$drops_pps + $rxd_pps]
+        rx_drops_pps=$[($rx_drops_t1 - $rx_drops_t0) / $DELAY]
+        rx_pps=$[($rx_pps_t1 - $rx_pps_t0) / $DELAY]
+        rx_bps=$[($rx_bytes_t1 - $rx_bytes_t0) * 8 / $DELAY]
+        rx_offered_pps=$[$rx_drops_pps + $rx_pps]
 
-        if (( $offered_pps == 0 )); then
-            echo "$iface Offered rate is zero pps"
-            continue
-        fi
+        tx_drops_pps=$[($tx_drops_t1 - $tx_drops_t0) / $DELAY]
+        tx_pps=$[($tx_pps_t1 - $tx_pps_t0) / $DELAY]
+        tx_bps=$[($tx_bytes_t1 - $tx_bytes_t0) * 8 / $DELAY]
+        tx_offered_pps=$[$tx_drops_pps + $tx_pps]
 
         if (( $KUNITS )); then
-            drops_pps=$[$drops_pps/1000]
-            rxd_pps=$[$rxd_pps/1000]
-            rxd_bps=$[$rxd_bps/1000]
-            offered_pps=$[$offered_pps/1000]
+            rx_drops_pps=$[$rx_drops_pps/1000]
+            rx_pps=$[$rx_pps/1000]
+            rx_bps=$[$rx_bps/1000]
+            rx_offered_pps=$[$rx_offered_pps/1000]
+
+            tx_drops_pps=$[$tx_drops_pps/1000]
+            tx_pps=$[$tx_pps/1000]
+            tx_bps=$[$tx_bps/1000]
+            tx_offered_pps=$[$tx_offered_pps/1000]
         fi
 
-        echo -n "$iface rxd ${rxd_bps} ${unit_pfx}bps. offered ${offered_pps} "
-        echo -n "dropped $drops_pps rxd ${rxd_pps} ${unit_pfx}pps "
-        echo    "=> $[$drops_pps*100/$offered_pps]% loss"
+        if (( $rx_offered_pps == 0 )); then
+            echo "$iface Rx Offered rate is zero pps"
+		else
+        	echo -ne "$iface \trxd ${rx_bps} ${unit_pfx}bps. \toffered ${rx_offered_pps} "
+        	echo -ne "\tdropped $rx_drops_pps \trxd ${rx_pps} ${unit_pfx}pps "
+        	echo -e  "\t=> $[$rx_drops_pps*100/$rx_offered_pps]% loss"
+        fi
+
+        if (( $tx_offered_pps == 0 )); then
+            echo "$iface Tx Offered rate is zero pps"
+		else
+        	echo -ne "$iface \ttxd ${tx_bps} ${unit_pfx}bps. \toffered ${tx_offered_pps} "
+        	echo -ne "\tdropped $tx_drops_pps \ttxd ${tx_pps} ${unit_pfx}pps "
+        	echo -e  "\t=> $[$tx_drops_pps*100/$tx_offered_pps]% loss"
+        fi
+
     done
 
     cp $dpctl_show_t1 $dpctl_show_t0
