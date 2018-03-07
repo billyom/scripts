@@ -41,13 +41,22 @@ from operator import mul
 def n_as_product_of_primes (n, num_primes):
     """
     >>> n_as_product_of_primes (200, 4)
-    ([1, 3, 5, 13], 5)
+    ([1, 1, 1, 199], 1)
+
+    >>> n_as_product_of_primes (1, 4)
+    ([1, 1, 1, 1], 0)
+
+    >>> n_as_product_of_primes (30, 4)
+    ([1, 2, 3, 5], 0)
+
+    >>> n_as_product_of_primes (1000000, 4)
+    ([2, 31, 127, 127], 2)
     """
 
     best_diff = None
     best_combo = None
 
-    for combo in itertools.combinations(primes_and_one, num_primes):
+    for combo in itertools.combinations_with_replacement(primes_and_one, num_primes):
         product = reduce(mul, combo, 1)
         diff = abs(product - n)
         if diff < best_diff or not best_diff:
@@ -56,7 +65,9 @@ def n_as_product_of_primes (n, num_primes):
         if best_diff == 0:
             break
 
-    return list(best_combo), best_diff
+    best_combo = list(best_combo)
+    best_combo.sort()              # ensure output is stable for doctests
+    return best_combo, best_diff
 
 
 def column_sum (lofl):
@@ -256,7 +267,7 @@ class MyCmd(cmd.Cmd):
 
         self._do_clear()
 
-        num_streams = 5
+        num_streams = 8
         streams = self.create_streams(num_streams, total_kpps, total_num_flows)
         stream_ids = self.client.add_streams(streams, ports=[0])
         self.client.start(ports=[0], force=True)
