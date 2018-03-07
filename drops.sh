@@ -105,10 +105,10 @@ do
 
         tx_drops_t0=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*TX packets.*dropped:\([0-9]\+\).*$/\1/p" < $dpctl_show_t0)
         tx_pps_t0=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*TX packets:\([0-9]\+\) errors.*$/\1/p" < $dpctl_show_t0)
-        tx_bytes_t0=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*TX bytes:\([0-9]\+\) .*$/\1/p" < $dpctl_show_t0)
+        tx_bytes_t0=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*TX bytes:\([0-9]\+\).*$/\1/p" < $dpctl_show_t0)
         tx_drops_t1=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*TX packets.*dropped:\([0-9]\+\).*$/\1/p" < $dpctl_show_t1)
         tx_pps_t1=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*TX packets:\([0-9]\+\) errors.*$/\1/p" < $dpctl_show_t1)
-        tx_bytes_t1=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*TX bytes:\([0-9]\+\) .*$/\1/p" < $dpctl_show_t1)
+        tx_bytes_t1=$(sed -n "/port [0-9]\+: $iface/,/port [0-9]\+:/ s/^.*TX bytes:\([0-9]\+\).*$/\1/p" < $dpctl_show_t1)
 
         #if [[ -z $drops_t0 || -z $pps_t0 || -z ... ]]; then error continue.
         rx_drops_pps=$[($rx_drops_t1 - $rx_drops_t0) / $DELAY]
