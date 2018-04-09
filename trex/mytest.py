@@ -92,20 +92,22 @@ class MyCmd(cmd.Cmd):
             self._print_warnings()
             return 0
 
-        flow_connections = [(0, 0), (1, 0), (2, 3), (3, 2)] #[(tx_port, rx_port), ...]
+        flow_connections = [(0, 1), (1, 0), (2, 3), (3, 2)] #[(tx_port, rx_port), ...]
 
         for tx_port, rx_port in flow_connections:
             try:
-                offered_kpps = int (stats[tx_port]['opackets'] / 1000 / stats_duration)
-                rxd_kpps = int (stats[rx_port]['ipackets'] / 1000 / stats_duration)
+                opackets = stats[tx_port]['opackets']
+                ipackets = stats[rx_port]['ipackets']
+                offered_kpps = int (opackets / 1000 / stats_duration)
+                rxd_kpps = int (ipackets / 1000 / stats_duration)
                 #dropped_kpps = int (stats['latency']...['err_cntrs']['dropped'] #only refers to latency pkts
-                dropped_cnt = stats[tx_port]['opackets'] - stats[rx_port]['ipackets']
+                dropped_cnt = opackets - ipackets
                 dropped_kpps = dropped_cnt / 1000 / stats_duration
-                dropped_pc = dropped_cnt * 100 / stats[tx_port]['opackets']
-
-                print "%d->%d offered %d dropped %d rxd %d (kpps) => %d%% loss" % \
+                dropped_pc = dropped_cnt * 100 / opackets
+                warn_str = " (rxd# > txd# !)" if ipackets > opackets else "" #often seen - is a TRex bug?
+                print "%d->%d offered %d dropped %d rxd %d (kpps) => %d%% loss%s" % \
                     (tx_port, rx_port, offered_kpps, dropped_kpps,
-                        rxd_kpps, dropped_pc)
+                        rxd_kpps, dropped_pc, warn_str)
             except:
                 #Most likely we haven't stated traffic on this port pair
                 print "%d->%d no stats (no traffic?)" % (tx_port, rx_port)
