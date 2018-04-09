@@ -48,7 +48,7 @@ class MyCmd(cmd.Cmd):
         for port, rate in enumerate(rates):
             if rate == 0:
                 continue
-            start_line = "-f stl/bom.py -m %skpps --port %d --force" % (rate, port)
+            start_line = "-f stl/traffic.py -m %skpps --port %d --force" % (rate, port)
             #start_line = "-f stl/bom.py --port %d --force" % (port)
             print start_line
             rc = self.client.start_line(start_line)

@@ -1,9 +1,5 @@
 from trex_stl_lib.api import *
 
-# IMIX profile - involves 3 streams of UDP packets
-# 1 - 60 bytes
-# 2 - 590 bytes
-# 3 - 1514 bytes
 class STLImix(object):
 
     def __init__ (self):
@@ -55,7 +51,7 @@ class STLImix(object):
         # construct the base packet for the profile
     	vm = STLScVmRaw( [ STLVmFlowVar(name="mac_dst",
                                     min_value=1,
-                                    max_value=1,
+                                    max_value=10,
                                     size=1, op="inc",step=1),
                        STLVmWrFlowVar(fv_name="mac_dst",
                                           pkt_offset= 5),
@@ -87,7 +83,7 @@ class STLImix(object):
 
         # create imix streams
         #return [self.create_stream(x['size'], x['pps'],x['isg'] , vm) for x in self.imix_table]
-        return self.create_stream(1024, 1, 0, vm, port_id+10)
+        return self.create_stream(230, 1, 0, vm, port_id+10)
 
 
 # dynamic load - used for trex console or simulator
