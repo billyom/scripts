@@ -1,0 +1,737 @@
+.gdbinit:12: Error in sourced command file:
+The program is not being run.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+[Inferior 1 (process 91680) exited normally]
+Breakpoint 1 at 0x40057b
+Starting program: /home/billyoma/src/find_leaks/a.out 
+
+Breakpoint 1, 0x000000000040057b in main ()
+.gdbinit:12: Error in sourced command file:
+The program is not being run.
+Breakpoint 1 at 0x40057f: file leaks.c, line 15.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+
+Breakpoint 1, main () at leaks.c:15
+__libc_start_main (main=0x400577 <main>, argc=1, argv=0x7fffffffe1b8, init=<optimized out>, fini=<optimized out>, rtld_fini=<optimized out>, stack_end=0x7fffffffe1a8)
+    at ../csu/libc-start.c:325
+.gdbinit:12: Error in sourced command file:
+The program is not being run.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+[Inferior 1 (process 91706) exited normally]
+Starting program: /home/billyoma/src/find_leaks/a.out 
+[Inferior 1 (process 91711) exited normally]
+-p magic.py: No such file or directory.
+-p ./magic.py: No such file or directory.
+-p /home/billyoma/src/find_leaks/magic.py: No such file or directory.
+  File "magic.py", line 1
+    import gdb
+    ^
+IndentationError: unexpected indent
+Breakpoint 1 at 0x7ffff7a91130: malloc. (2 locations)
+Temporary breakpoint 2 at 0x40057f: file leaks.c, line 15.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+
+Temporary breakpoint 2, main () at leaks.c:15
+MallocBp
+MallocBp
+__libc_start_main (main=0x400577 <main>, argc=1, argv=0x7fffffffe1b8, init=<optimized out>, fini=<optimized out>, rtld_fini=<optimized out>, stack_end=0x7fffffffe1a8)
+    at ../csu/libc-start.c:325
+[Inferior 1 (process 91728) exited normally]
+The program is not being run.
+The program is not being run.
+The program is not being run.
+Breakpoint 3 at 0x40056a: file leaks.c, line 7.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+fn1
+MallocBp
+fn1
+MallocBp
+[Inferior 1 (process 91736) exited normally]
+  File "<string>", line 2
+    print gdb.selected_frame()
+            ^
+SyntaxError: invalid syntax
+Error while executing Python code.
+No stack.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+fn1
+MallocBp
+fn1
+MallocBp
+[Inferior 1 (process 91778) exited normally]
+  File "magic.py", line 6
+    print fr
+           ^
+SyntaxError: Missing parentheses in call to 'print'
+Breakpoint 4 at 0x40056a: file leaks.c, line 7.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+fn1
+fn1
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+MallocBp
+fn1
+fn1
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+MallocBp
+[Inferior 1 (process 91784) exited normally]
+Breakpoint 5 at 0x40056a: file leaks.c, line 7.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+fn1
+fn1
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+MallocBp
+fn1
+fn1
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+MallocBp
+[Inferior 1 (process 91788) exited normally]
+Breakpoint 6 at 0x40056a: file leaks.c, line 7.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+fn1
+fn1
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+MallocBp
+fn1
+fn1
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+MallocBp
+[Inferior 1 (process 91795) exited normally]
+Breakpoint 7 at 0x40056a: file leaks.c, line 7.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+fn1
+fn1
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+MallocBp
+fn1
+fn1
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+MallocBp
+[Inferior 1 (process 91797) exited normally]
+Starting program: /home/billyoma/src/find_leaks/a.out 
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+fn1
+fn1
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+MallocBp
+fn1
+fn1
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+MallocBp
+[Inferior 1 (process 91801) exited normally]
+Breakpoint 8 at 0x40056a: file leaks.c, line 7.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+MallocBp
+fn1
+fn1
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+MallocBp
+fn1
+fn1
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+MallocBp
+[Inferior 1 (process 91803) exited normally]
+Breakpoint 9 at 0x40056a: file leaks.c, line 7.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+{stack=0x7fffffffe0c0,code=0x400566,!special}
+[Inferior 1 (process 91810) exited normally]
+Breakpoint 10 at 0x40056a: file leaks.c, line 7.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+name fn1 func fn1
+name fn1 func fn1
+[Inferior 1 (process 91839) exited normally]
+.gdbinit:12: Error in sourced command file:
+The program is not being run.
+Breakpoint 1 at 0x400700
+Starting program: /home/billyoma/src/find_leaks/a.out 
+called from calloc
+
+Breakpoint 1, malloc (n=1425) at dl-minimal.c:94
+#0  malloc (n=1425) at dl-minimal.c:94
+#1  0x00007ffff7df0f3e in calloc (nmemb=nmemb@entry=1425, size=size@entry=1) at dl-minimal.c:114
+#2  0x00007ffff7de2bf6 in _dl_new_object (realname=realname@entry=0x7ffff7df68cf "", libname=libname@entry=0x7ffff7df68cf "", type=type@entry=0, loader=loader@entry=0x0, 
+    mode=mode@entry=536870912, nsid=nsid@entry=0) at dl-object.c:75
+#3  0x00007ffff7dd965b in dl_main (phdr=0x400040, phnum=9, user_entry=0x7fffffffe0f8, auxv=0x7fffffffe360) at rtld.c:1033
+#4  0x00007ffff7df0632 in _dl_sysdep_start (start_argptr=start_argptr@entry=0x7fffffffe1b0, dl_main=dl_main@entry=0x7ffff7dd91e0 <dl_main>) at ../elf/dl-sysdep.c:249
+#5  0x00007ffff7dd8c2a in _dl_start_final (arg=0x7fffffffe1b0) at rtld.c:323
+#6  _dl_start (arg=0x7fffffffe1b0) at rtld.c:429
+#7  0x00007ffff7dd7c38 in _start () from /lib64/ld-linux-x86-64.so.2
+#8  0x0000000000000001 in ?? ()
+#9  0x00007fffffffe4be in ?? ()
+#10 0x0000000000000000 in ?? ()
+Run till exit from #0  malloc (n=1425) at dl-minimal.c:94
+_dl_new_object (realname=realname@entry=0x7ffff7df68cf "", libname=libname@entry=0x7ffff7df68cf "", type=type@entry=0, loader=loader@entry=0x0, mode=mode@entry=536870912, nsid=nsid@entry=0)
+    at dl-object.c:78
+Value returned is $1 = (void *) 0x7ffff7ffe168
+#0  _dl_new_object (realname=realname@entry=0x7ffff7df68cf "", libname=libname@entry=0x7ffff7df68cf "", type=type@entry=0, loader=loader@entry=0x0, mode=mode@entry=536870912, 
+    nsid=nsid@entry=0) at dl-object.c:78
+#1  0x00007ffff7dd965b in dl_main (phdr=0x400040, phnum=9, user_entry=0x7fffffffe0f8, auxv=0x7fffffffe360) at rtld.c:1033
+#2  0x00007ffff7df0632 in _dl_sysdep_start (start_argptr=start_argptr@entry=0x7fffffffe1b0, dl_main=dl_main@entry=0x7ffff7dd91e0 <dl_main>) at ../elf/dl-sysdep.c:249
+#3  0x00007ffff7dd8c2a in _dl_start_final (arg=0x7fffffffe1b0) at rtld.c:323
+#4  _dl_start (arg=0x7fffffffe1b0) at rtld.c:429
+#5  0x00007ffff7dd7c38 in _start () from /lib64/ld-linux-x86-64.so.2
+#6  0x0000000000000001 in ?? ()
+#7  0x00007fffffffe4be in ?? ()
+#8  0x0000000000000000 in ?? ()
+Continuing.
+called from calloc
+
+Breakpoint 1, malloc (n=1169) at dl-minimal.c:94
+Continuing.
+dl-minimal.c:94: No such file or directory.
+dl-minimal.c:94: No such file or directory.
+[Inferior 1 (process 91998) exited normally]
+Traceback (most recent call last):
+  File "magic.py", line 12, in <module>
+    MallocBp('xzalloc')
+ValueError: Invalid ID for the `frame' object.
+Breakpoint 2 at 0x4008e7: file util.c, line 67.
+Breakpoint 3 at 0x4008e7: file util.c, line 67.
+Traceback (most recent call last):
+  File "magic.py", line 3, in <module>
+    class MallocBp(gdb.lkdfjdlkBreakpoint):
+AttributeError: module 'gdb' has no attribute 'lkdfjdlkBreakpoint'
+Traceback (most recent call last):
+  File "magic.py", line 12, in <module>
+    MallocBp('xzalloc')
+ValueError: Invalid ID for the `frame' object.
+The program is not being run.
+Traceback (most recent call last):
+  File "magic.py", line 12, in <module>
+    MallocBp('xzalloc')
+ValueError: Invalid ID for the `frame' object.
+  File "magic.py", line 14
+    MallocFinBp()
+                ^
+TabError: inconsistent use of tabs and spaces in indentation
+Breakpoint 4 at 0x4008e7: file util.c, line 67.
+`/home/billyoma/src/find_leaks/a.out' has changed; re-reading symbols.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+Temporary breakpoint 5 at 0x400bbe: file leaks.c, line 10.
+called from main
+Temporary breakpoint 6 at 0x400bbe: file leaks.c, line 10.
+called from main
+[Inferior 1 (process 92118) exited normally]
+Thread-specific breakpoint 5 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 6 deleted - thread 1 no longer in the thread list.
+Breakpoint 7 at 0x4008e7: file util.c, line 67.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+Temporary breakpoint 8 at 0x400bbe: file leaks.c, line 10.
+finbp fr.name() fn1 rtn 0x603010
+Temporary breakpoint 9 at 0x400bbe: file leaks.c, line 10.
+finbp fr.name() fn1 rtn 0x603060
+[Inferior 1 (process 92122) exited normally]
+Thread-specific breakpoint 8 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 9 deleted - thread 1 no longer in the thread list.
+Undefined command: "reload".  Try "help".
+.gdbinit:12: Error in sourced command file:
+The program is not being run.
+Breakpoint 1 at 0x4008e7: file util.c, line 67.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+Temporary breakpoint 2 at 0x400bbe: file leaks.c, line 10.
+finbp fr.name() fn1 rtn 0x603010
+Temporary breakpoint 3 at 0x400bbe: file leaks.c, line 10.
+finbp fr.name() fn1 rtn 0x603470
+[Inferior 1 (process 92144) exited normally]
+Thread-specific breakpoint 2 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 3 deleted - thread 1 no longer in the thread list.
+The program is not being run.
+Breakpoint 4 at 0x7ffff7a91130: malloc. (2 locations)
+Starting program: /home/billyoma/src/find_leaks/a.out 
+Temporary breakpoint 5 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 6 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 7 at 0x7ffff7dd9ee4: file setup-vdso.h, line 94.
+Temporary breakpoint 8 at 0x7ffff7de65ff: file dl-hwcaps.c, line 209.
+finbp fr.name() _dl_important_hwcaps rtn 0x7ffff7ffeba8
+Temporary breakpoint 9 at 0x7ffff7ddf506: file dl-load.c, line 680.
+finbp fr.name() _dl_init_paths rtn 0x7ffff7ffebf8
+Temporary breakpoint 10 at 0x7ffff7ddf553: file dl-load.c, line 694.
+finbp fr.name() _dl_init_paths rtn 0x7ffff7ff6000
+Temporary breakpoint 11 at 0x7ffff7df3f5a: file strdup.c, line 44.
+finbp fr.name() __strdup rtn 0x7ffff7ff74a0
+Temporary breakpoint 12 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 13 at 0x7ffff7de2ef4: file dl-object.c, line 166.
+finbp fr.name() _dl_new_object rtn 0x7ffff7ff7960
+Temporary breakpoint 14 at 0x7ffff7de53cb: file dl-deps.c, line 465.
+finbp fr.name() _dl_map_object_deps rtn 0x7ffff7ff7980
+Temporary breakpoint 15 at 0x7ffff7de5737: file dl-deps.c, line 502.
+finbp fr.name() _dl_map_object_deps rtn 0x7ffff7ff79a8
+Temporary breakpoint 16 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 17 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 18 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 19 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 20 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 21 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 22 at 0x7ffff7a7a1d5: file filedoalloc.c, line 127.
+finbp fr.name() __GI__IO_file_doallocate rtn 0x603060
+[Inferior 1 (process 92416) exited normally]
+Thread-specific breakpoint 5 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 6 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 7 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 8 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 9 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 10 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 11 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 12 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 13 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 14 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 15 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 16 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 17 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 18 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 19 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 20 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 21 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 22 deleted - thread 1 no longer in the thread list.
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+Starting program: /home/billyoma/src/find_leaks/a.out 
+Temporary breakpoint 23 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 24 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 25 at 0x7ffff7dd9ee4: file setup-vdso.h, line 94.
+Temporary breakpoint 26 at 0x7ffff7de65ff: file dl-hwcaps.c, line 209.
+finbp fr.name() _dl_important_hwcaps rtn 0x7ffff7ffeba8
+Temporary breakpoint 27 at 0x7ffff7ddf506: file dl-load.c, line 680.
+finbp fr.name() _dl_init_paths rtn 0x7ffff7ffebf8
+Temporary breakpoint 28 at 0x7ffff7ddf553: file dl-load.c, line 694.
+finbp fr.name() _dl_init_paths rtn 0x7ffff7ff6000
+Temporary breakpoint 29 at 0x7ffff7df3f5a: file strdup.c, line 44.
+finbp fr.name() __strdup rtn 0x7ffff7ff74a0
+Temporary breakpoint 30 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 31 at 0x7ffff7de2ef4: file dl-object.c, line 166.
+finbp fr.name() _dl_new_object rtn 0x7ffff7ff7960
+Temporary breakpoint 32 at 0x7ffff7de53cb: file dl-deps.c, line 465.
+finbp fr.name() _dl_map_object_deps rtn 0x7ffff7ff7980
+Temporary breakpoint 33 at 0x7ffff7de5737: file dl-deps.c, line 502.
+finbp fr.name() _dl_map_object_deps rtn 0x7ffff7ff79a8
+Temporary breakpoint 34 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 35 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 36 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 37 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 38 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 39 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 40 at 0x7ffff7a7a1d5: file filedoalloc.c, line 127.
+finbp fr.name() __GI__IO_file_doallocate rtn 0x603060
+[Inferior 1 (process 92420) exited normally]
+Thread-specific breakpoint 23 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 24 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 25 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 26 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 27 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 28 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 29 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 30 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 31 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 32 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 33 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 34 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 35 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 36 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 37 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 38 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 39 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 40 deleted - thread 1 no longer in the thread list.
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+Breakpoint 41 at 0x400bc9: file leaks.c, line 17.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+Temporary breakpoint 42 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 43 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 44 at 0x7ffff7dd9ee4: file setup-vdso.h, line 94.
+Temporary breakpoint 45 at 0x7ffff7de65ff: file dl-hwcaps.c, line 209.
+finbp fr.name() _dl_important_hwcaps rtn 0x7ffff7ffeba8
+Temporary breakpoint 46 at 0x7ffff7ddf506: file dl-load.c, line 680.
+finbp fr.name() _dl_init_paths rtn 0x7ffff7ffebf8
+Temporary breakpoint 47 at 0x7ffff7ddf553: file dl-load.c, line 694.
+finbp fr.name() _dl_init_paths rtn 0x7ffff7ff6000
+Temporary breakpoint 48 at 0x7ffff7df3f5a: file strdup.c, line 44.
+finbp fr.name() __strdup rtn 0x7ffff7ff74a0
+Temporary breakpoint 49 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 50 at 0x7ffff7de2ef4: file dl-object.c, line 166.
+finbp fr.name() _dl_new_object rtn 0x7ffff7ff7960
+Temporary breakpoint 51 at 0x7ffff7de53cb: file dl-deps.c, line 465.
+finbp fr.name() _dl_map_object_deps rtn 0x7ffff7ff7980
+Temporary breakpoint 52 at 0x7ffff7de5737: file dl-deps.c, line 502.
+finbp fr.name() _dl_map_object_deps rtn 0x7ffff7ff79a8
+Temporary breakpoint 53 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 54 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 55 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 56 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 57 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+Temporary breakpoint 58 at 0x7ffff7df0f3e: file dl-minimal.c, line 114.
+
+Breakpoint 41, main () at leaks.c:17
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+something wrong with MallocFinBp!
+Temporary breakpoint 59 at 0x7ffff7a7a1d5: file filedoalloc.c, line 127.
+finbp fr.name() __GI__IO_file_doallocate rtn 0x603060
+Continuing.
+[Inferior 1 (process 92422) exited normally]
+The program is not being run.
+The program is not being run.
+The program is not being run.
+Undefined command: "cls".  Try "help".
+Undefined command: "cls".  Try "help".
+Undefined command: "cls".  Try "help".
+Breakpoint 60 at 0x4008e7: file util.c, line 67.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+Temporary breakpoint 61 at 0x400bbe: file leaks.c, line 10.
+Python Exception <class 'ValueError'> Variable 'size' not found.: 
+
+Temporary breakpoint 61, fn1 () at leaks.c:10
+Breakpoint 62 at 0x4008e7: file util.c, line 67.
+Temporary breakpoint 63 at 0x400bc9: file leaks.c, line 17.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+
+Temporary breakpoint 63, main () at leaks.c:17
+Continuing.
+size 64
+Temporary breakpoint 64 at 0x400bbe: file leaks.c, line 10.
+m 1531399223.8003392 0x603010 fn1
+size 64
+Temporary breakpoint 65 at 0x400bbe: file leaks.c, line 10.
+m 1531399223.802673 0x603470 fn1
+[Inferior 1 (process 92523) exited normally]
+Thread-specific breakpoint 64 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 65 deleted - thread 1 no longer in the thread list.
+The program is not being run.
+Breakpoint 66 at 0x4008e7: file util.c, line 67.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+size 64
+Temporary breakpoint 67 at 0x400bbe: file leaks.c, line 10.
+m 1531399241.1814158 0x603010 fn1
+size 64
+Temporary breakpoint 68 at 0x400bbe: file leaks.c, line 10.
+m 1531399241.1833181 0x603470 fn1
+[Inferior 1 (process 92525) exited normally]
+Thread-specific breakpoint 67 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 68 deleted - thread 1 no longer in the thread list.
+  File "magic.py", line 6
+    self.size = size
+                   ^
+TabError: inconsistent use of tabs and spaces in indentation
+Breakpoint 69 at 0x4008e7: file util.c, line 67.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+size 64
+size 64
+[Inferior 1 (process 92533) exited normally]
+  File "magic.py", line 6
+    FinishBreakpoint.__init__(self, arg1, arg2)
+                                              ^
+TabError: inconsistent use of tabs and spaces in indentation
+Breakpoint 70 at 0x4008e7: file util.c, line 67.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+size 64
+Python Exception <class 'NameError'> name 'FinishBreakpoint' is not defined: 
+
+Breakpoint 70, xzalloc (size=64) at util.c:67
+Breakpoint 71 at 0x4008e7: file util.c, line 67.
+Program not restarted.
+Continuing.
+size 64
+Python Exception <class 'NameError'> name 'arg1' is not defined: 
+
+Breakpoint 71, xzalloc (size=64) at util.c:67
+Continuing.
+[Inferior 1 (process 92544) exited normally]
+Breakpoint 72 at 0x4008e7: file util.c, line 67.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+size 64
+Python Exception <class 'NameError'> name 'arg1' is not defined: 
+
+Breakpoint 72, xzalloc (size=64) at util.c:67
+Continuing.
+size 64
+Python Exception <class 'NameError'> name 'arg1' is not defined: 
+
+Breakpoint 72, xzalloc (size=64) at util.c:67
+Continuing.
+[Inferior 1 (process 92546) exited normally]
+Breakpoint 73 at 0x4008e7: file util.c, line 67.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+size 64
+Temporary breakpoint 74 at 0x400bbe: file leaks.c, line 10.
+m 1531399597.4060013 0x603010 fn1 64
+size 64
+Temporary breakpoint 75 at 0x400bbe: file leaks.c, line 10.
+m 1531399597.408271 0x603470 fn1 64
+[Inferior 1 (process 92550) exited normally]
+Thread-specific breakpoint 74 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 75 deleted - thread 1 no longer in the thread list.
+Breakpoint 76 at 0x400bc9: file leaks.c, line 17.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+
+Breakpoint 76, main () at leaks.c:17
+Breakpoint 77 at 0x4008e7: file util.c, line 67.
+Breakpoint 78 at 0x7ffff7a914f0: free. (2 locations)
+Continuing.
+size 64
+Temporary breakpoint 79 at 0x400bbe: file leaks.c, line 10.
+m 1531399829.8296802 0x603010 fn1 64
+size 64
+Temporary breakpoint 80 at 0x400bbe: file leaks.c, line 10.
+m 1531399829.8315866 0x603470 fn1 64
+
+Breakpoint 78, __GI___libc_free (mem=0x603470) at malloc.c:2934
+Continuing.
+[Inferior 1 (process 92559) exited normally]
+Breakpoint 81 at 0x400bc9: file leaks.c, line 17.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+
+Breakpoint 81, main () at leaks.c:17
+  File "magic.py", line 26
+    fr = gdb.newest_frame()
+                          ^
+TabError: inconsistent use of tabs and spaces in indentation
+Breakpoint 82 at 0x4008e7: file util.c, line 67.
+Breakpoint 83 at 0x7ffff7a914f0: free. (2 locations)
+Continuing.
+size 64
+Temporary breakpoint 84 at 0x400bbe: file leaks.c, line 10.
+m 1531400004.1242878 0x603010 fn1 64
+size 64
+Temporary breakpoint 85 at 0x400bbe: file leaks.c, line 10.
+m 1531400004.1267273 0x603470 fn1 64
+Python Exception <class 'AttributeError'> 'builtin_function_or_method' object has no attribute 'name': 
+
+Breakpoint 83, __GI___libc_free (mem=0x603470) at malloc.c:2934
+Continuing.
+[Inferior 1 (process 92565) exited normally]
+Breakpoint 86 at 0x400bc9: file leaks.c, line 17.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+
+Breakpoint 86, main () at leaks.c:17
+Breakpoint 87 at 0x4008e7: file util.c, line 67.
+Breakpoint 88 at 0x7ffff7a914f0: free. (2 locations)
+Continuing.
+size 64
+Temporary breakpoint 89 at 0x400bbe: file leaks.c, line 10.
+m 1531400074.8975196 0x603010 fn1 64
+size 64
+Temporary breakpoint 90 at 0x400bbe: file leaks.c, line 10.
+m 1531400074.899969 0x603470 fn1 64
+f 1531400074.9015372 0x603470 main
+[Inferior 1 (process 92569) exited normally]
+Thread-specific breakpoint 89 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 90 deleted - thread 1 no longer in the thread list.
+Breakpoint 91 at 0x400bc9: file leaks.c, line 17.
+Starting program: /home/billyoma/src/find_leaks/a.out 
+
+Breakpoint 91, main () at leaks.c:17
+Breakpoint 92 at 0x4008e7: file util.c, line 67.
+Breakpoint 93 at 0x7ffff7a914f0: free. (2 locations)
+Continuing.
+size 64
+Temporary breakpoint 94 at 0x400bbe: file leaks.c, line 10.
+size 64
+Temporary breakpoint 95 at 0x400bbe: file leaks.c, line 10.
+[Inferior 1 (process 92583) exited normally]
+Thread-specific breakpoint 94 deleted - thread 1 no longer in the thread list.
+Thread-specific breakpoint 95 deleted - thread 1 no longer in the thread list.
+  File "<string>", line 1
+    print records
+                ^
+SyntaxError: Missing parentheses in call to 'print'
+Error while executing Python code.
+['m 1531400381.9456754 0x603010 fn1 64', 'm 1531400381.9476025 0x603470 fn1 64', 'f 1531400381.9485855 0x603470 main']

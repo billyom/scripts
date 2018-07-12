@@ -1,0 +1,61 @@
+http://tromey.com/blog/?p=501
+
+can't get this to work
+
+    (gdb) python
+    import gdb
+    class MallocBp(gdb.Breakpoint):
+        def stop (self):
+            gdb.write('MallocBp\n')
+            return True  #True stop, False continue
+    MallocBp('malloc')
+    end
+    Breakpoint 2 at 0x7fb946e710c0: malloc. (2 locations)
+    (gdb)
+    
+        
+
+Let's try:
+https://sourceware.org/gdb/wiki/PythonGdbTutorial > Writing a new gdb command
+
+    cat > /tmp/file << EOF
+    import gdb
+    class SavePrefixCommand (gdb.Command):
+      "Prefix command for saving things."
+    
+      def __init__ (self):
+        super (SavePrefixCommand, self).__init__ ("save",
+                             gdb.COMMAND_SUPPORT,
+                             gdb.COMPLETE_NONE, True)
+    
+    SavePrefixCommand()
+    EOF
+    
+    (gdb) source /tmp/file               << older version may require 'source -p ...' 
+    (gdb) help save
+    Prefix command for saving things.
+    
+    List of save subcommands:
+    
+    
+    Type "help save" followed by save subcommand name for full documentation.
+    Type "apropos word" to search for commands related to "word".
+    Command name abbreviations are allowed if unambiguous.
+    (gdb)
+    
+ooh look we've made a 'prefix command' (whatever that is exactly)
+
+
+Breakpoint to print caller name
+    import gdb
+    class MallocBp(gdb.Breakpoint):
+        def stop (self):
+            fr = gdb.newest_frame()
+            print ("called from", fr.older().name())
+            return True  #True stop, False continue
+    MallocBp('xzalloc')
+
+FinishBreakpoints
+* These are *temporary* - seems you need to set them from another bp within the fn.
+* Gives access to the return value of the fn (no matter where from the fn it returns afaik - but not cpp exception stack unwinding - calls self.out_of_scope()
+* 
