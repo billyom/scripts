@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Reorder the entries in kindle's MyClippings.txt from chronological 
 # order into several files (one per book) in which the notes & highlights 
 # are ordered by their location with in the books text.
@@ -13,6 +14,10 @@
 #   Orphan multiline note-
 #   Chpt highligh w single-line note-
 #   Chpt highligh w Multiline note-
+#
+# 
+#
+#
 
 import re
 import sys
@@ -59,6 +64,7 @@ class Title (object):
         self.entries.sort()
         #self.notes.sort()
         #self.highlights.sort()
+        
         
         
 class Note (object):
@@ -192,44 +198,50 @@ def print_titles_text(titles):
     for title in titles.values():
         print_title(title)
 
-
-gUsage = """
-
-Reorder the entries in kindle's My Clippings.txt for a book from chronological 
-order into an output where the notes & highlights 
-are ordered by their location within the book."""
-
-def main ():        
-    #process cli
-    # impl cli usgage 'clippings book [--clippings my_clippings_file] [--mediawiki] > output_file'
-
-    parser = OptionParser(usage="usage: %prog  book [--clippings my_clippings_file] [--mediawiki] > output_file" + gUsage)
-    parser.add_option("-c", "--clippings", default="My Clippings.txt",
-                      dest="clippings",
-                      help="The kindle clippings file. Defaults to '%default'")
-    parser.add_option("-m", "--mediawiki", default=False,
-                      action="store_true", dest="mediawiki",
-                      help="Create output in mediawiki format.")
-                      
-    (options, args) = parser.parse_args()
+def get_title_author_from_csv(f):
+    """
+    Given a file with the lines:
+        "Your Kindle Notes For:",,,
+        "STALIN: THE COURT OF THE RED TSAR",,,
+        "by Simon Sebag Montefiore",,,
+        "Free Kindle instant preview:",,,
+        "http://a.co/4wnnCN3",,,
+    Return ("STALIN: THE COURT OF THE RED TSAR", "by Simon Sebag Montefiore")
     
-    
-    if (len(args) != 1):
-        print >> sys.stderr, "The book argument is required. Use -h to see help."
-        sys.exit(1)
-    
-    requested_book = args[0]
-    g_titles = {} #title:ustr -> Title
+    Also advance the file pointer to the start of the clippings proper.
+    """
+    regex = re.compile (u"\"(?P<words>.*)\"")
+    l = f.readline()
+    while l.find("Your Kindle Notes For") < 0:
+        l = f.readline()
+    l = f.readline()
+    mo = regex.match(l)
+    if not mo:
+        raise Exception("Failed to find title line in .csv file")
+    title_str = mo.group('words')
+    l = f.readline()
+    mo = regex.match(l)
+    if not mo:
+        raise Exception("Failed to find author line in .csv file")
+    author_str = mo.group('words')
 
-    f = codecs.open (options.clippings, 'r', 'utf-8')
+    while l.find("Annotation Type") < 0:
+        l = f.readline()
+    
+    return title_str, author_str
 
+def parse_clippings_txt(f, titles):
+    """
+    f:File open File obj to a Kindle clippings.txt file
+    titles:{title:ustr -> Title} OUT
+    """
     current_block = []
     for l in f:
         if l.find("====") == 0:
             #end of the block - analyse block
             try:
-                t = current_block[0].strip()  #TODO remove sometimes leading u'\ufeff'
-                #t = t.encode('ascii', 'ignore') #for now just collapse to ascii
+                title_str = current_block[0].strip()  #TODO remove sometimes leading u'\ufeff'
+                #title_str = title_str.encode('ascii', 'ignore') #for now just collapse to ascii
 
                 mo = g_loc_regex.search(current_block[1], re.IGNORECASE)
                 if not mo: raise Exception("regex failed")
@@ -249,7 +261,7 @@ def main ():
                     pass
                 txt = u"\n".join(current_block[3:]) #collapse the text down to single string w embedded '\n's
                 
-                title = g_titles.setdefault(t, Title(t))  #retrieve/create title to store note/highlight
+                title = g_titles.setdefault(title_str, Title(title_str))  #retrieve/create title to store note/highlight
                             
                 type = mo.group('type').lower()
                 if mo.group('type').lower() == u'note': 
@@ -266,7 +278,87 @@ def main ():
             #not end of block yet - add line to current block 
             current_block.append(l.strip())
 
+def parse_csv(f, titles):
+    """
+    f:File open File obj to a clippings file downloaded from kindle cloud
+    titles:{title:ustr -> Title} OUT
+    """
+    title_str, author_str = get_title_author_from_csv(f)
+    title = Title(title_str + " " + author_str)
+    titles[title_str] = title
     
+    loc_regex = re.compile (u"\"(?P<type>.*)\",\"Location (?P<loc_s>\d+)\",\"(?P<starred>.*)\",\"(?P<txt>.*)\"")
+
+    for l in f:
+        try:
+            bits=[]
+            start_idx=0
+            for i in range (4):
+                idx = l.find('","', start_idx)
+                bits.append(l[start_idx:idx])
+                start_idx = idx + 3
+            bits[0] = bits[0][1:]
+            loc_s = int(bits[1].split()[1])
+            txt = bits[3]
+            if bits[0].lower().find("note") >= 0:
+                title.add_note(Note(loc_s, None, txt))
+            else:
+                title.add_hl(Highlight(loc_s, None, None, txt))
+        except (Exception), ex:
+            print "Failed to parse '%s'" % l
+            logging.exception(ex)
+        
+        """
+        try:
+            mo = loc_regex.search(l, re.IGNORECASE)
+            if not mo:
+                raise Exception("regex failed")
+            
+            loc_s = int(mo.group('loc_s')) #there is always a starting location
+            txt = mo.group('txt')
+            type = mo.group('type').lower()
+            if mo.group('type').lower() == u'note': 
+                note = Note(loc_s, page, txt)
+                title.add_note(note)
+            if mo.group('type').lower().find(u'highlight') == 0:
+                hl = Highlight(loc_s, None, page, txt)
+                title.add_hl(hl)                
+        except Exception, ex:
+            logging.exception(ex)
+        """
+
+gUsage = """
+Reorder the entries in kindle's My Clippings.txt for a book from chronological 
+order into an output where the notes & highlights 
+are ordered by their location within the book."""
+
+def main ():        
+    #process cli
+    # impl cli usgage 'clippings book [--clippings my_clippings_file] [--mediawiki] > output_file'
+
+    parser = OptionParser(usage="usage: %prog  book [--clippings my_clippings_file] [--mediawiki] > output_file" + gUsage)
+    parser.add_option("-c", "--clippings", default="My Clippings.txt",
+                      dest="clippings",
+                      help="The kindle clippings file. Defaults to '%default'")
+    parser.add_option("-m", "--mediawiki", default=False,
+                      action="store_true", dest="mediawiki",
+                      help="Create output in mediawiki format.")
+                      
+    (options, args) = parser.parse_args()
+    
+    if (len(args) != 1):
+        print >> sys.stderr, "The book argument is required. Use -h to see help."
+        sys.exit(1)
+    
+    requested_book = args[0]
+    g_titles = {} #title:ustr -> Title
+
+    f = codecs.open (options.clippings, 'r', 'utf-8')
+    if options.clippings[-4:] == ".csv":
+        parse_csv(f, g_titles)
+    else:
+        parse_clippings_txt(f, g_titles)
+        
     for title in g_titles.values():
         title.defrob()
         
