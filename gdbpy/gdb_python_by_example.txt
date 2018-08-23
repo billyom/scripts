@@ -12,8 +12,8 @@ can't get this to work
     end
     Breakpoint 2 at 0x7fb946e710c0: malloc. (2 locations)
     (gdb)
-    
-        
+
+
 
 Let's try:
 https://sourceware.org/gdb/wiki/PythonGdbTutorial > Writing a new gdb command
@@ -22,27 +22,27 @@ https://sourceware.org/gdb/wiki/PythonGdbTutorial > Writing a new gdb command
     import gdb
     class SavePrefixCommand (gdb.Command):
       "Prefix command for saving things."
-    
+
       def __init__ (self):
         super (SavePrefixCommand, self).__init__ ("save",
                              gdb.COMMAND_SUPPORT,
                              gdb.COMPLETE_NONE, True)
-    
+
     SavePrefixCommand()
     EOF
-    
-    (gdb) source /tmp/file               << older version may require 'source -p ...' 
+
+    (gdb) source /tmp/file               << older version may require 'source -p ...'
     (gdb) help save
     Prefix command for saving things.
-    
+
     List of save subcommands:
-    
-    
+
+
     Type "help save" followed by save subcommand name for full documentation.
     Type "apropos word" to search for commands related to "word".
     Command name abbreviations are allowed if unambiguous.
     (gdb)
-    
+
 ooh look we've made a 'prefix command' (whatever that is exactly)
 
 
@@ -57,5 +57,5 @@ Breakpoint to print caller name
 
 FinishBreakpoints
 * These are *temporary* - seems you need to set them from another bp within the fn.
-* Gives access to the return value of the fn (no matter where from the fn it returns afaik - but not cpp exception stack unwinding - calls self.out_of_scope()
-* 
+* Gives access to the return value of the fn (no matter where from in the fn it returns afaik - but not cpp exception stack unwinding - calls self.out_of_scope()
+*
