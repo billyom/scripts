@@ -10,7 +10,8 @@ class MallocFinBp(gdb.FinishBreakpoint):
 
     def stop (self):
         fr = gdb.newest_frame()
-        g_records.append( "malloc %s %s %s %s" % (time.time(), self.return_value, fr.name(), self.size))
+        # Finish bp is actually located in the *caller* of the target
+        g_records.append("malloc,%s,%s,%s,%s" % (time.time(), fr.older().name(), self.return_value, self.size))
         return False  #True stop, False continue
 
     def out_of_scope (self):
@@ -19,7 +20,6 @@ class MallocFinBp(gdb.FinishBreakpoint):
 class MallocBp(gdb.Breakpoint):
     def stop (self):
         size = gdb.newest_frame().read_var("size")
-        print ("size", size)
         MallocFinBp(size)  #default to sets the temp FinishBp to *this* fn call
         return False   #True stop, False continue
 
@@ -27,12 +27,13 @@ class FreeBp(gdb.Breakpoint):
     def stop (self):
         fr = gdb.newest_frame()
         #need to compile with -static-libgcc or 'mem' will not be available
-        g_records.append( "free %s %s %s" % (time.time(), fr.read_var("mem"), fr.older().name()))   
+        g_records.append(("free,%s,%s,%s" % (time.time(), fr.older().name(), fr.read_var("mem"))))
         return False   #True stop, False continue
-        
-MallocBp('xzalloc')
+
+MallocBp('xcalloc')
+MallocBp('xmalloc')
 FreeBp('free')
-        
+
 class LeakPrefixCommand (gdb.Command):
   "Prefix command for mem leaks."
 
@@ -53,7 +54,16 @@ class LeakRecordCommand (gdb.Command):
                                                        gdb.COMPLETE_FILENAME)
 
     def invoke (self, arg, from_tty):
-        print (g_records)
+        f = None
+        if arg:
+            f = open(arg.split()[0], 'w')
+        for rec in g_records:
+            print (rec)
+            if f:
+                f.write(rec)
+                f.write("\n")
+        if f:
+            f.close()
 
 LeakRecordCommand ()
 
