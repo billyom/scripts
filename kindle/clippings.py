@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# coding=utf-8
 # Reorder the entries in kindle's MyClippings.txt from chronological 
 # order into several files (one per book) in which the notes & highlights 
 # are ordered by their location with in the books text.
@@ -50,7 +51,11 @@ class Title (object):
         orphan_notes = [] #notes that do not belong to a highlight
         for note in self.notes:
             for hl in self.highlights:
-                if hl.loc_s <= note.loc_s <= hl.loc_e:
+                if hl.loc_e and hl.loc_s <= note.loc_s <= hl.loc_e:
+                    hl.add_note(note) #note 'belongs' to this hl
+                    break
+                elif not hl.loc_e and hl.loc_s <= note.loc_s <= hl.loc_s + 1:
+                    # Title probably created from a .csv and lacks end locations for highlights.
                     hl.add_note(note) #note 'belongs' to this hl
                     break
             else:
@@ -74,6 +79,7 @@ class Note (object):
         self.chpt_level = 0
         txt = txt.lstrip() #remove any leading spaces
         txt = txt.rstrip(' \n')
+        print "Note: '%s'" % txt
         if txt[:4].lower() in ['chap', 'chpt']: 
             self.chpt_level = 1
             txt = txt[4:]
@@ -290,17 +296,21 @@ def parse_csv(f, titles):
     loc_regex = re.compile (u"\"(?P<type>.*)\",\"Location (?P<loc_s>\d+)\",\"(?P<starred>.*)\",\"(?P<txt>.*)\"")
 
     for l in f:
+        if l[0] == "#":
+            continue
         try:
-            bits=[]
-            start_idx=0
-            for i in range (4):
+            parts=[]
+            start_idx=1         # skip leading "
+            for i in range (3): # four fields => three '","' delimiters
                 idx = l.find('","', start_idx)
-                bits.append(l[start_idx:idx])
+                parts.append(l[start_idx:idx].strip())
                 start_idx = idx + 3
-            bits[0] = bits[0][1:]
-            loc_s = int(bits[1].split()[1])
-            txt = bits[3]
-            if bits[0].lower().find("note") >= 0:
+            parts.append(l[start_idx:(l.find('"', start_idx))]) #fourth field runs up to but not including final '"'
+            print parts
+            #parts[0] = parts[0][1:]
+            loc_s = int(parts[1].split()[1])
+            txt = parts[3]
+            if parts[0].lower().find("note") >= 0:
                 title.add_note(Note(loc_s, None, txt))
             else:
                 title.add_hl(Highlight(loc_s, None, None, txt))
