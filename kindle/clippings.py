@@ -79,7 +79,7 @@ class Note (object):
         self.chpt_level = 0
         txt = txt.lstrip() #remove any leading spaces
         txt = txt.rstrip(' \n')
-        print "Note: '%s'" % txt
+        #print "Note: '%s'" % txt
         if txt[:4].lower() in ['chap', 'chpt']: 
             self.chpt_level = 1
             txt = txt[4:]
@@ -195,7 +195,8 @@ def print_entries_mediawiki(entries):
                 for n, note in enumerate(entry.notes):
                     s += u"\n:''%s''" % (note.txt.replace("\n", "''\n''"))
         elif isinstance(entry, Note):
-            s += u"\n\n''%s (loc. %d)''" % (entry.txt.replace("\n", "''\n''"), entry.loc_s)
+            #s += u"\n\n''%s (loc. %d)''" % (entry.txt.replace("\n", "''\n''"), entry.loc_s)
+            s += u"\n\n''%s''" % (entry.txt.replace("\n", "''\n''"))
             
         print s.encode('utf-8', 'ignore')
         
@@ -216,16 +217,21 @@ def get_title_author_from_csv(f):
     
     Also advance the file pointer to the start of the clippings proper.
     """
+    line_no = 0
     regex = re.compile (u"\"(?P<words>.*)\"")
     l = f.readline()
+    line_no += 1
     while l.find("Your Kindle Notes For") < 0:
         l = f.readline()
+        line_no += 1
     l = f.readline()
+    line_no += 1
     mo = regex.match(l)
     if not mo:
         raise Exception("Failed to find title line in .csv file")
     title_str = mo.group('words')
     l = f.readline()
+    line_no += 1
     mo = regex.match(l)
     if not mo:
         raise Exception("Failed to find author line in .csv file")
@@ -233,8 +239,9 @@ def get_title_author_from_csv(f):
 
     while l.find("Annotation Type") < 0:
         l = f.readline()
+        line_no += 1
     
-    return title_str, author_str
+    return title_str, author_str, line_no
 
 def parse_clippings_txt(f, titles):
     """
@@ -289,34 +296,38 @@ def parse_csv(f, titles):
     f:File open File obj to a clippings file downloaded from kindle cloud
     titles:{title:ustr -> Title} OUT
     """
-    title_str, author_str = get_title_author_from_csv(f)
+    title_str, author_str, line_no = get_title_author_from_csv(f)
     title = Title(title_str + " " + author_str)
     titles[title_str] = title
     
     loc_regex = re.compile (u"\"(?P<type>.*)\",\"Location (?P<loc_s>\d+)\",\"(?P<starred>.*)\",\"(?P<txt>.*)\"")
-
-    for l in f:
-        if l[0] == "#":
-            continue
-        try:
-            parts=[]
-            start_idx=1         # skip leading "
-            for i in range (3): # four fields => three '","' delimiters
-                idx = l.find('","', start_idx)
-                parts.append(l[start_idx:idx].strip())
-                start_idx = idx + 3
-            parts.append(l[start_idx:(l.find('"', start_idx))]) #fourth field runs up to but not including final '"'
-            print parts
-            #parts[0] = parts[0][1:]
-            loc_s = int(parts[1].split()[1])
-            txt = parts[3]
-            if parts[0].lower().find("note") >= 0:
-                title.add_note(Note(loc_s, None, txt))
-            else:
-                title.add_hl(Highlight(loc_s, None, None, txt))
-        except (Exception), ex:
-            print "Failed to parse '%s'" % l
-            logging.exception(ex)
+    
+    try:
+        for l in f:
+            line_no += 1
+            if l[0] == "#":
+                continue
+            try:
+                parts=[]
+                start_idx=1         # skip leading "
+                for i in range (3): # four fields => three '","' delimiters
+                    idx = l.find('","', start_idx)
+                    parts.append(l[start_idx:idx].strip())
+                    start_idx = idx + 3
+                parts.append(l[start_idx:(l.find('"', start_idx))]) #fourth field runs up to but not including final '"'
+                loc_s = int(parts[1].split()[1])
+                txt = parts[3].strip()
+                #print line_no, txt
+                if parts[0].lower().find("note") >= 0:
+                    title.add_note(Note(loc_s, None, txt))
+                else:
+                    title.add_hl(Highlight(loc_s, None, None, txt))
+            except (Exception), ex:
+                print "Failed to parse '%s'" % l
+                logging.exception(ex)
+    except (Exception), ex:
+        print "Failed to get line! line# %d" % line_no
+        logging.exception(ex)
         
         """
         try:
@@ -363,7 +374,7 @@ def main ():
     requested_book = args[0]
     g_titles = {} #title:ustr -> Title
 
-    f = codecs.open (options.clippings, 'r', 'utf-8')
+    f = codecs.open (options.clippings, 'r', 'cp1252', 'replace')  #cp500, cp850, cp858, cp1140, cp1252, iso8859_15, mac_roman, 
     if options.clippings[-4:] == ".csv":
         parse_csv(f, g_titles)
     else:
