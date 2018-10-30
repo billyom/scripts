@@ -37,12 +37,12 @@ def main():
                 leak_cnt += 1
             else:
                 free_cnt += 1
-                print "#%d %s freed at #%d %s" % \
-                    (idx, recs[idx], freed_at, recs[freed_at])
+                # print "#%d %s freed at #%d %s" % \
+                #    (idx, recs[idx], freed_at, recs[freed_at])
 
     print ("%d mallocs and %d frees" % (malloc_cnt, free_cnt))
     if not leak_cnt:
-        print "No Leaks \0/"
+        print "No Leaks \\0/"
     else:
         print "%d leaks" % (leak_cnt)
 

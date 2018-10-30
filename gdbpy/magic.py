@@ -1,56 +1,47 @@
 import gdb
 import time
 
+# See README.md for overview
+
 g_records = [] #[str, ...]
-
-class MallocFinBp(gdb.FinishBreakpoint):
-    def __init__(self, size):
-        gdb.FinishBreakpoint.__init__(self)
-        self.size = size
-
-    def stop (self):
-        fr = gdb.newest_frame()
-        # Finish bp is actually located in the *caller* of the target
-        g_records.append("malloc,%s,%s,%s,%s" % (time.time(),
-            fr.older().name(), self.return_value, self.size))
-        return False  #True stop, False continue
-
-    def out_of_scope (self):
-        print ("something wrong with MallocFinBp!")
-
-class MallocFinBp(gdb.FinishBreakpoint):
-    def __init__(self, size):
-        gdb.FinishBreakpoint.__init__(self)
-        self.size = size
-
-    def stop (self):
-        fr = gdb.newest_frame()
-        # Finish bp is actually located in the *caller* of the target
-        g_records.append("malloc,%s,%s,%s,%s" % (time.time(),
-            fr.older().name(), self.return_value, self.size))
-        return False  #True stop, False continue
-
-    def out_of_scope (self):
-        print ("something wrong with MallocFinBp!")
 
 class MallocBp(gdb.Breakpoint):
     def stop (self):
+        # TODO use some mem offset to avoid requiring debug info for 'size' symbol
         size = gdb.newest_frame().read_var("size")
         MallocFinBp(size)  #default to sets the temp FinishBp to *this* fn call
-        return False   #True stop, False continue
+        return False
+
+class MallocFinBp(gdb.FinishBreakpoint):
+    def __init__(self, size):
+        gdb.FinishBreakpoint.__init__(self)
+        self.size = size
+
+    def stop (self):
+        fr = gdb.newest_frame()
+        # Note a FinishBreakpoint is actually located in the *caller* of the fn
+        # so newest_frame rtns frame for caller of malloc not malloc itself.
+        # TODO add file & line number of calling fn
+        g_records.append("malloc,%s,%s,%s,%s" % (time.time(),
+            fr.older().name(), self.return_value, self.size))
+        return False  #True stop, False continue
+
+    def out_of_scope (self):
+        print ("Something wrong with MallocFinBp!")
 
 class FreeBp(gdb.Breakpoint):
     def stop (self):
         fr = gdb.newest_frame()
-        #need to compile with -static-libgcc or 'mem' will not be available
+        #need to compile with -static-libgcc or 'mem' will not be available. Also -g ?
+        # TODO use some mem offset to avoid requiring debug info for 'size' symbol
         g_records.append(("free,%s,%s,%s" % (time.time(), fr.older().name(),
             fr.read_var("mem"))))
-        return False   #True stop, False continue
+        return False
 
 class TargetBp(gdb.Breakpoint):
     def stop (self):
         g_leak_start_cmd.invoke("", False)
-        TargetFinBp()  #default is to set the temp FinishBp to *this* fn call
+        TargetFinBp() #no arg => set the temp FinishBp to *this* fn call
         return False   #True stop, False continue
 
 class TargetFinBp(gdb.FinishBreakpoint):
@@ -62,7 +53,7 @@ class TargetFinBp(gdb.FinishBreakpoint):
         return False
 
     def out_of_scope (self):
-        print ("something wrong with TargetFinBp!")
+        print ("Something wrong with TargetFinBp!")
 
 g_xcalloc_bp=MallocBp('xcalloc')
 g_xmalloc_bp=MallocBp('xmalloc')
