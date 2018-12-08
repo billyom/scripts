@@ -26,9 +26,18 @@ import codecs
 import logging
 from optparse import OptionParser
 
-g_loc_regex = re.compile (u"Your\s+(?P<type>(Highlight)|(Note)|(Bookmark))( on Page (?P<page>\d+))?.*Location (?P<loc_s>\d+)(\-)?((?P<loc_e>\d+))?")
+g_loc_regex = re.compile (u"Your\s+(?P<type>(Highlight)|(Note)|(Bookmark))( on Page (?P<page>\d+))?.*[Ll]ocation (?P<loc_s>\d+)(\-)?((?P<loc_e>\d+))?")
 #- Your             Highlight on Page 2 | Location 58-59 | Added on Saturday, 21 July 12 17:54:08
+#- Your             Highlight on page 5 | location 79-71 | Added on Sunday, 14 October 2018 23:35:18'
 
+def re_test(bla):
+    """
+    >>> str = '- Your             Highlight on Page 2 | Location 58-59 | Added on Saturday, 21 July 12 17:54:08'
+    >>> mo = g_loc_regex.search(str, re.IGNORECASE)
+    >>> loc_s = int(mo.group('loc_s'))
+    58
+    """
+    None
 
 class Title (object):
     def __init__(self, title):
@@ -198,7 +207,7 @@ def print_entries_mediawiki(entries):
             #s += u"\n\n''%s (loc. %d)''" % (entry.txt.replace("\n", "''\n''"), entry.loc_s)
             s += u"\n\n''%s''" % (entry.txt.replace("\n", "''\n''"))
             
-        print s.encode('utf-8', 'ignore')
+        print s.encode('cp1252', 'ignore')
         
         
 def print_titles_text(titles):
@@ -245,7 +254,7 @@ def get_title_author_from_csv(f):
 
 def parse_clippings_txt(f, titles):
     """
-    f:File open File obj to a Kindle clippings.txt file
+    f:File An open File obj to a Kindle clippings.txt file
     titles:{title:ustr -> Title} OUT
     """
     current_block = []
@@ -257,7 +266,8 @@ def parse_clippings_txt(f, titles):
                 #title_str = title_str.encode('ascii', 'ignore') #for now just collapse to ascii
 
                 mo = g_loc_regex.search(current_block[1], re.IGNORECASE)
-                if not mo: raise Exception("regex failed")
+                if not mo:
+                    raise Exception("regex failed '%s'" % current_block[1])
                 
                 loc_s = int(mo.group('loc_s')) #there is always a starting location
                 loc_e = None
@@ -274,7 +284,7 @@ def parse_clippings_txt(f, titles):
                     pass
                 txt = u"\n".join(current_block[3:]) #collapse the text down to single string w embedded '\n's
                 
-                title = g_titles.setdefault(title_str, Title(title_str))  #retrieve/create title to store note/highlight
+                title = titles.setdefault(title_str, Title(title_str))  #retrieve/create title to store note/highlight
                             
                 type = mo.group('type').lower()
                 if mo.group('type').lower() == u'note': 
@@ -374,10 +384,11 @@ def main ():
     requested_book = args[0]
     g_titles = {} #title:ustr -> Title
 
-    f = codecs.open (options.clippings, 'r', 'cp1252', 'replace')  #cp500, cp850, cp858, cp1140, cp1252, iso8859_15, mac_roman, 
     if options.clippings[-4:] == ".csv":
+        f = codecs.open (options.clippings, 'r', 'utf-8')
         parse_csv(f, g_titles)
     else:
+        f = codecs.open (options.clippings, 'r', 'cp1252', 'replace')  #cp500, cp850, cp858, cp1140, cp1252, iso8859_15, mac_roman,             
         parse_clippings_txt(f, g_titles)
         
     for title in g_titles.values():
