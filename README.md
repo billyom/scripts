@@ -1,9 +1,15 @@
+#Heading 1
+
+Gotta leave a blank-line after headings!
+
 #Character Formatting
+
 *Italic characters*  _Italic characters_
 **bold characters** __bold characters__
 ~~strikethrough text~~
 
 #Lists
+
 * Item 1      # need space after *. + and - are also valid bullet markers
 * Item 2
   * Item 2a   # two leading spaces to sub-item
@@ -18,6 +24,7 @@ Some say this works to autonumber ordered lists.
 > Quote
 
 #Code
+
 Talk about `code` inline.
 
     A block of code
