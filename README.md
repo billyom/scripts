@@ -1,8 +1,8 @@
-#Heading 1
+# Heading 1
+## Heading 2
+Gotta leave a space after the #'s.
 
-Gotta leave a blank-line after headings!
-
-#Character Formatting
+# Character Formatting
 
 *Italic characters*  _Italic characters_
 **bold characters** __bold characters__
