@@ -47,8 +47,9 @@ Now here is the reference
 
 ![Alt text][id]
 
-
 Click on [link text](http://example.com/ ) here.
+
+An immediate reference to an image:
 
 ![Alt text](star.png "Optional title attribute")
 
