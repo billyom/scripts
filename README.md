@@ -8,7 +8,7 @@ Gotta leave a space after the #'s.
 **bold characters** __bold characters__
 ~~strikethrough text~~
 
-#Lists
+# Lists
 
 * Item 1      # need space after *. + and - are also valid bullet markers
 * Item 2
@@ -23,7 +23,7 @@ Some say this works to autonumber ordered lists.
 > Block
 > Quote
 
-#Code
+# Code
 
 Talk about `code` inline.
 
@@ -37,7 +37,7 @@ A block of code can also be marked with backticks. This method
 supports the option of syntax highlighting the block as <language>.
 ```
 
-#Links
+# Links
 
 This link [click here](http://example.com/ "Title") has a title attribute.
 
