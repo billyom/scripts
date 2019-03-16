@@ -39,6 +39,22 @@ supports the option of syntax highlighting the block as <language>.
 
 # Links
 
-This link [click here](http://example.com/ "Title") has a title attribute.
+Here is link reference - it should be invisible until referenced later:
 
-![Alt text](/path/to/image.png "Optional title attribute")
+[id]: star.png "Optional title attribute"
+
+Now here is the reference
+
+![Alt text][id]
+
+
+Click on [link text](http://example.com/ ) here.
+
+![Alt text](star.png "Optional title attribute")
+
+# Tables
+| Day     | Meal    | Price |
+| --------|---------|-------|
+| Monday  | pasta   | $6    |
+| Tuesday | chicken | $8    |
+
