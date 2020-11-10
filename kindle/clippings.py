@@ -16,15 +16,13 @@
 #   Chpt highligh w single-line note-
 #   Chpt highligh w Multiline note-
 #
-# 
-#
-#
 
 import re
 import sys
 import codecs
 import logging
 from optparse import OptionParser
+from collections import OrderedDict
 
 g_loc_regex = re.compile (u"Your\s+(?P<type>(Highlight)|(Note)|(Bookmark))( on Page (?P<page>\d+))?.*[Ll]ocation (?P<loc_s>\d+)(\-)?((?P<loc_e>\d+))?")
 #- Your             Highlight on Page 2 | Location 58-59 | Added on Saturday, 21 July 12 17:54:08
@@ -52,9 +50,12 @@ class Title (object):
     def add_hl (self, hl):
         self.highlights.append(hl)
 
-    def defrob(self):
+    def crossref(self):
         """
-        Move notes that 'belong' to a highlight into that hl.
+        Populates entries element, which associates Notes with correct Highlight
+        and in order of occurence in the Title.
+        
+        To be called once all Notes and Highlights have been added.
         """
         
         orphan_notes = [] #notes that do not belong to a highlight
@@ -127,22 +128,25 @@ class Highlight (object):
     def __cmp__(self, that):
         return cmp(self.loc_s, that.loc_s)
 
-def print_title_text(title):
+def print_title_text(title, f):
     s = u"="*len(title.title)
     s += u"\n%s\n" % title.title
     s += u"="*len(title.title)
-    print s.encode('utf-8', 'ignore')
+    #print s.encode('utf-8', 'ignore')
+    f.write(s)
     
     if title.entries:
         #ie title had it's entries&highlights merged
-        print_entries_text(title.entries)
+        print_entries_text(title.entries, f)
     else:
-        print_entries_text(title.highlights)
-        print_entries_text(title.notes)
-    print "\n\n"
+        print_entries_text(title.highlights, f)
+        print_entries_text(title.notes, f)
     
-def print_entries_text(entries):
-    #print "print_entries_text", len(entries)
+def print_entries_text(entries, f):
+    """
+    Given a list of Notes & Highlights prints them in
+    mediawiki markup to file f.
+    """
     for entry in entries:
         s = u""
         if isinstance(entry, Highlight):
@@ -164,23 +168,29 @@ def print_entries_text(entries):
         elif isinstance(entry, Note):
             s += u"\nNOTE:\t%s (%d)" % (entry.txt.replace("\n", "\n\t"), entry.loc_s)
             
-        print s.encode('utf-8', 'ignore')
+        #print s.encode('utf-8', 'ignore')
+        f.write(s)
             
             
-def print_title_mediawiki(title):
+def print_title_mediawiki(title, f):
     s = u"''%s''\n" % title.title
-    print s.encode('utf-8', 'ignore')
+    #print s.encode('utf-8', 'ignore')
+    f.write(s)
     
     if title.entries:
-        #ie title had it's entries&highlights merged
-        print_entries_mediawiki(title.entries)
+        #ie title had it's entries & highlights merged
+        print_entries_mediawiki(title.entries, f)
     else:
-        print_entries_mediawiki(title.highlights)
-        print_entries_mediawiki(title.notes)
-    print "\n\n"
+        print_entries_mediawiki(title.highlights, f)
+        print_entries_mediawiki(title.notes, f)
     
-def print_entries_mediawiki(entries):
-    #print "print_entries_mediawiki", len(entries)
+    
+def print_entries_mediawiki(entries, f):
+    """
+    Given a list of Notes & Highlights prints them in
+    mediawiki markup to file f.
+    """
+    
     for entry in entries:
         s = u""
         if isinstance(entry, Highlight):
@@ -207,7 +217,8 @@ def print_entries_mediawiki(entries):
             #s += u"\n\n''%s (loc. %d)''" % (entry.txt.replace("\n", "''\n''"), entry.loc_s)
             s += u"\n\n''%s''" % (entry.txt.replace("\n", "''\n''"))
             
-        print s.encode('cp1252', 'ignore')
+        #print s.encode('cp1252', 'ignore')
+        f.write(s)
         
         
 def print_titles_text(titles):
@@ -254,6 +265,11 @@ def get_title_author_from_csv(f):
 
 def parse_clippings_txt(f, titles):
     """
+    Parse a clippings.txt file. 
+    
+    Creates a Title for each book found. Extracts the Notes and Highlights for the Title and 
+    adds them to the Title.
+    
     f:File An open File obj to a Kindle clippings.txt file
     titles:{title:ustr -> Title} OUT
     """
@@ -303,6 +319,11 @@ def parse_clippings_txt(f, titles):
 
 def parse_csv(f, titles):
     """
+    Parses a clippings csv file.
+    
+    Creates a Title for each book found. Extracts the Notes and Highlights for the Title and 
+    adds them to the Title.
+    
     f:File open File obj to a clippings file downloaded from kindle cloud
     titles:{title:ustr -> Title} OUT
     """
@@ -358,6 +379,36 @@ def parse_csv(f, titles):
             logging.exception(ex)
         """
 
+def choose_book(titles):
+    """
+    Present a list of title to the user and let them choose one.
+    
+    titles:{title:ustr -> Title}
+    
+    returns: title:ustr
+    """
+    
+    print("Select Book:")
+    for idx, title in enumerate(titles.keys()):
+        print("%(idx)d. %(title)s" % locals())
+    choice_txt = raw_input("Enter number or part of title: ").lower()
+
+    choice_int = None    
+    try:
+        choice_int = int(choice_txt)
+    except:
+        pass
+        
+    if (choice_int):
+        # User entered a number. Pick the corresponding title from displayed list.
+        title = titles.keys()[choice_int]
+    else:
+        # User entered a string. Find the first title that matches.        
+        title = filter(lambda t: t.lower().find(choice_txt) >= 0, titles.keys())[0]
+            
+    return title
+    
+
 gUsage = """
 Reorder the entries in kindle's My Clippings.txt for a book from chronological 
 order into an output where the notes & highlights 
@@ -365,46 +416,52 @@ are ordered by their location within the book."""
 
 def main ():        
     #process cli
-    # impl cli usgage 'clippings book [--clippings my_clippings_file] [--mediawiki] > output_file'
+    # impl cli usgage 'clippings book [--clippings my_clippings_file] [--txt] > output_file'
 
-    parser = OptionParser(usage="usage: %prog  book [--clippings my_clippings_file] [--mediawiki] > output_file" + gUsage)
+    parser = OptionParser(usage="usage: %prog  book [--clippings my_clippings_file] [--txt] > output_file" + gUsage)
     parser.add_option("-c", "--clippings", default="My Clippings.txt",
                       dest="clippings",
                       help="The kindle clippings file. Defaults to '%default'")
-    parser.add_option("-m", "--mediawiki", default=False,
-                      action="store_true", dest="mediawiki",
-                      help="Create output in mediawiki format.")
+    parser.add_option("-t", "--txt", default=True,
+                      action="store_false", dest="mediawiki",
+                      help="Create output in plain text format. Default is mediawiki format.")
                       
     (options, args) = parser.parse_args()
-    
-    if (len(args) != 1):
-        print >> sys.stderr, "The book argument is required. Use -h to see help."
-        sys.exit(1)
-    
-    requested_book = args[0]
-    g_titles = {} #title:ustr -> Title
+        
+    titles = OrderedDict()    #title:ustr -> Title
 
+    # Clippings can be either .txt or .csv. Call the correct parse fn.
     if options.clippings[-4:] == ".csv":
         f = codecs.open (options.clippings, 'r', 'utf-8')
-        parse_csv(f, g_titles)
+        parse_csv(f, titles)
     else:
+        # TODO - seems to be no rhyme or reason to the encoding of the clippings file!
         f = codecs.open (options.clippings, 'r', 'cp1252', 'replace')  #cp500, cp850, cp858, cp1140, cp1252, iso8859_15, mac_roman,             
-        parse_clippings_txt(f, g_titles)
+        parse_clippings_txt(f, titles)
         
-    for title in g_titles.values():
-        title.defrob()
+    if (len(args) != 1):
+        requested_book = choose_book(titles)
+    else:
+        requested_book = args[0]
         
-    for book_name in g_titles.keys():
+    print "Writing", requested_book, "to", "'title.mw/.txt'..."
+        
+    for book_name in titles.keys():
         if book_name.lower().find(requested_book.lower()) >=0:
+            titles[book_name].crossref()
             if options.mediawiki:
-                print_title_mediawiki(g_titles[book_name])
+                f = codecs.open("./title.mw", 'w', 'cp1252', 'replace')
+                print_title_mediawiki(titles[book_name], f)
+                f.close()
             else:
-                print_title_text(g_titles[book_name])
+                f = codecs.open("./title.txt", 'w', 'cp1252', 'replace')
+                print_title_text(titles[book_name], f)
+                f.close()
             sys.exit(0)
     
     print >> sys.stderr, "Could not find any clippings from a title matching '%s'!" % requested_book
     print >> sys.stderr, "Clippings file refers to the following titles:" 
-    for book_name in g_titles.keys():        
+    for book_name in titles.keys():        
         print >> sys.stderr, "\t", book_name.encode('ascii', 'replace')
 
     sys.exit(1)
