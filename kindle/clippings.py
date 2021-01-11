@@ -436,7 +436,7 @@ def main ():
         parse_csv(f, titles)
     else:
         # TODO - seems to be no rhyme or reason to the encoding of the clippings file!
-        f = codecs.open (options.clippings, 'r', 'cp1252', 'replace')  #cp500, cp850, cp858, cp1140, cp1252, iso8859_15, mac_roman,             
+        f = codecs.open (options.clippings, 'r', 'utf-8', 'replace')  #cp500, cp850, cp858, cp1140, cp1252, iso8859_15, mac_roman,             
         parse_clippings_txt(f, titles)
         
     if (len(args) != 1):
@@ -450,11 +450,11 @@ def main ():
         if book_name.lower().find(requested_book.lower()) >=0:
             titles[book_name].crossref()
             if options.mediawiki:
-                f = codecs.open("./title.mw", 'w', 'cp1252', 'replace')
+                f = codecs.open("./title.mw", 'w', 'utf-8', 'replace')
                 print_title_mediawiki(titles[book_name], f)
                 f.close()
             else:
-                f = codecs.open("./title.txt", 'w', 'cp1252', 'replace')
+                f = codecs.open("./title.txt", 'w', 'utf-8', 'replace')
                 print_title_text(titles[book_name], f)
                 f.close()
             sys.exit(0)
