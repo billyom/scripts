@@ -14,7 +14,7 @@ Gotta leave a space after the #'s.
 * Item 2
   * Item 2a   # two leading spaces to sub-item
 
-Some say this works to autonumber ordered lists. 
+Some say the following works to autonumber ordered lists. 
 
 1. First Item
 * Second
