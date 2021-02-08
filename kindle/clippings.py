@@ -168,13 +168,13 @@ def print_entries_text(entries, f):
         elif isinstance(entry, Note):
             s += u"\nNOTE:\t%s (%d)" % (entry.txt.replace("\n", "\n\t"), entry.loc_s)
             
-        #print s.encode('utf-8', 'ignore')
+        #print (s.encode('utf-8', 'ignore'))
         f.write(s)
             
             
 def print_title_mediawiki(title, f):
     s = u"''%s''\n" % title.title
-    #print s.encode('utf-8', 'ignore')
+    #print (s.encode('utf-8', 'ignore'))
     f.write(s)
     
     if title.entries:
@@ -217,7 +217,7 @@ def print_entries_mediawiki(entries, f):
             #s += u"\n\n''%s (loc. %d)''" % (entry.txt.replace("\n", "''\n''"), entry.loc_s)
             s += u"\n\n''%s''" % (entry.txt.replace("\n", "''\n''"))
             
-        #print s.encode('cp1252', 'ignore')
+        #print (s.encode('cp1252', 'ignore'))
         f.write(s)
         
         
@@ -309,7 +309,7 @@ def parse_clippings_txt(f, titles):
                 if mo.group('type').lower() == u'highlight': 
                     hl = Highlight(loc_s, loc_e, page, txt)
                     title.add_hl(hl)                
-            except Exception, ex:
+            except Exception as ex:
                 logging.exception(ex)
                 
             current_block = []
@@ -353,11 +353,11 @@ def parse_csv(f, titles):
                     title.add_note(Note(loc_s, None, txt))
                 else:
                     title.add_hl(Highlight(loc_s, None, None, txt))
-            except (Exception), ex:
-                print "Failed to parse '%s'" % l
+            except Exception as ex:
+                print ("Failed to parse '%s'" % l)
                 logging.exception(ex)
-    except (Exception), ex:
-        print "Failed to get line! line# %d" % line_no
+    except Exception as ex:
+        print ("Failed to get line! line# %d" % line_no)
         logging.exception(ex)
         
         """
@@ -375,7 +375,7 @@ def parse_csv(f, titles):
             if mo.group('type').lower().find(u'highlight') == 0:
                 hl = Highlight(loc_s, None, page, txt)
                 title.add_hl(hl)                
-        except Exception, ex:
+        except Exception as ex:
             logging.exception(ex)
         """
 
@@ -390,7 +390,8 @@ def choose_book(titles):
     
     print("Select Book:")
     for idx, title in enumerate(titles.keys()):
-        print("%(idx)d. %(title)s" % locals())
+        print(("%(idx)d. %(title)s" % locals()).encode('ascii', 'ignore'))
+
     choice_txt = raw_input("Enter number or part of title: ").lower()
 
     choice_int = None    
@@ -444,7 +445,7 @@ def main ():
     else:
         requested_book = args[0]
         
-    print "Writing", requested_book, "to", "'title.mw/.txt'..."
+    print (("Writing '" + requested_book + "' to" + " title.mw/.txt...").encode('ascii', 'replace'))
         
     for book_name in titles.keys():
         if book_name.lower().find(requested_book.lower()) >=0:
