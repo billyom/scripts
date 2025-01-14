@@ -4,7 +4,6 @@ Gotta leave a space after the #'s!
 
 # Character Formatting
 
-Normal
 *Italic characters*  _Italic characters_
 **bold characters** __bold characters__
 ~~strikethrough text~~
